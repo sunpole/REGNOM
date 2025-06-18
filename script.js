@@ -3,14 +3,27 @@ let allSymbols = {};
 
 // Загружаем символы и форматы стран
 async function loadAllData() {
-    const symbolsResponse = await fetch('symbols.json');
-    allSymbols = await symbolsResponse.json();
+    try {
+        const symbolsResponse = await fetch('symbols.json');
+        allSymbols = await symbolsResponse.json();
 
-    const countryList = ['belgium', 'france', 'germany']; // Добавьте другие страны здесь
-    for (const country of countryList) {
-        const response = await fetch(`${country}.json`);
-        const countryData = await response.json();
-        countriesData[country] = countryData.formats;
+        // Получаем список стран на основе загружаемых файлов
+        const countryList = Object.keys(allSymbols); // Используем имена файлов как список стран
+        
+        for (const country of countryList) {
+            const response = await fetch(`${country}.json`);
+            // Проверяем, загружается ли файл
+            if (!response.ok) {
+                console.error(`Ошибка загрузки файла ${country}.json: ${response.statusText}`);
+                continue; // Пропускаем итерацию, если файл не найден
+            }
+
+            const countryData = await response.json();
+            countriesData[country] = countryData.formats;
+            console.log(`Загружены данные для страны: ${country}`, countryData.formats);
+        }
+    } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
     }
 }
 
@@ -20,7 +33,7 @@ function createRegex(format) {
         .replace(/0/g, '[0-9]')      // заменяем 0 цифрой
         .replace(/X/g, '[A-Z]')      // заменяем X на любую заглавную букву
         .replace(/-/g, '\\-')        // экранируем дефис
-        .replace(/\s/g, '[\\s-]?')     // заменяем пробел на пробел или тире
+        .replace(/\s/g, '[\\s-]?')   // заменяем пробелы на пробел или тире
         .toLowerCase());             // делаем нижний регистр для соответствия
 }
 
@@ -33,12 +46,15 @@ function searchCountry(licensePlate) {
 
         formats.forEach(({ format, description }) => {
             const regex = createRegex(format);
+            console.log(`Проверка формата: ${format} с регулярным выражением: ${regex}`);
+
             if (regex.test(licensePlate.toLowerCase().trim())) {
                 matches.push({
                     country,
                     format,
                     description,
                 });
+                console.log(`Найдено совпадение: ${country} - ${format}`);
             }
         });
     }
