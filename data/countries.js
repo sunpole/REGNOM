@@ -1,6 +1,6 @@
 // data/countries.js
 
-const countryDatabase = [
+export const countryDatabase = [
   {
     name: "БЕЛАРУСЬ",
     code: "BLR",
