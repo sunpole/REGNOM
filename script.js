@@ -1,103 +1,57 @@
-let countriesData = {};
-let allSymbols = {};
+// script.js
 
-// Загружаем символы и форматы стран
-async function loadAllData() {
-    try {
-        const symbolsResponse = await fetch('symbols.json');
-        allSymbols = await symbolsResponse.json();
+// Подгрузка модулей (при использовании <script type="module">)
+import { MODELS } from './data/models.js';
+import { countryDatabase } from './data/countries.js';
 
-        // Получаем список стран на основе загружаемых файлов
-        const countryList = Object.keys(allSymbols); // Используем имена файлов как список стран
-        
-        for (const country of countryList) {
-            const response = await fetch(`${country}.json`);
-            // Проверяем, загружается ли файл
-            if (!response.ok) {
-                console.error(`Ошибка загрузки файла ${country}.json: ${response.statusText}`);
-                continue; // Пропускаем итерацию, если файл не найден
-            }
-
-            const countryData = await response.json();
-            countriesData[country] = countryData.formats;
-            console.log(`Загружены данные для страны: ${country}`, countryData.formats);
-        }
-    } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
+// === та же логика что выше ===
+function maskToRegex(mask) {
+  let regexStr = '^';
+  for (let char of mask) {
+    if (MODELS[char]) {
+      if (char === 'C') {
+        regexStr += '(' + MODELS.C.map(c => (c ? c.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') : '')).join('|') + ')';
+      } else {
+        regexStr += '[' + MODELS[char] + ']';
+      }
+    } else {
+      regexStr += char.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
+  }
+  return new RegExp(regexStr + '$', 'i');
 }
 
-// Функция для создания регулярного выражения из формата
-function createRegex(format) {
-    return new RegExp(format
-        .replace(/0/g, '[0-9]')      // заменяем 0 цифрой
-        .replace(/X/g, '[A-Z]')      // заменяем X на любую заглавную букву
-        .replace(/-/g, '\\-')        // экранируем дефис
-        .replace(/\s/g, '[\\s-]?')   // заменяем пробелы на пробел или тире
-        .toLowerCase());             // делаем нижний регистр для соответствия
+document.getElementById('search').addEventListener('input', function () {
+  const input = this.value.trim();
+  const output = [];
+
+  for (let country of countryDatabase) {
+    for (let mask of country.masks) {
+      const regex = maskToRegex(mask);
+      if (regex.test(input)) {
+        output.push(`${input} соответствует маске ${mask} в стране ${country.name}`);
+      }
+    }
+  }
+
+  const results = document.getElementById('results');
+  results.innerHTML = output.length > 0
+    ? '<ul>' + output.map(r => `<li>${r}</li>`).join('') + '</ul>'
+    : '<p>Ничего не найдено</p>';
+});
+
+function renderKnowledgeBase() {
+  const container = document.getElementById('knowledge-base');
+  countryDatabase.forEach(country => {
+    const div = document.createElement('div');
+    div.className = 'country-block';
+    div.innerHTML = `
+      <strong>${country.name} (${country.code})</strong><br>
+      Маски: ${country.masks.join(', ')}<br>
+      Рекомендуемые: ${country.recommended.join(', ')}
+    `;
+    container.appendChild(div);
+  });
 }
 
-// Функция для поиска совпадений в реальном времени
-function searchCountry(licensePlate) {
-    let matches = [];
-
-    for (const country in countriesData) {
-        const formats = countriesData[country];
-
-        if (!Array.isArray(formats)) {
-            console.warn(`Некорректные данные форматов для страны ${country}:`, formats);
-            continue;
-        }
-
-        formats.forEach(format => {
-            const regex = createRegex(format);
-            console.log(`Проверка формата: ${format} с регулярным выражением: ${regex}`);
-
-            if (regex.test(licensePlate.toLowerCase().trim())) {
-                matches.push({
-                    country,
-                    format,
-                    description: '' // Описание отсутствует в текущем формате данных
-                });
-                console.log(`Найдено совпадение: ${country} - ${format}`);
-            }
-        });
-    }
-
-    return matches;
-}
-
-
-// Обновление списка совпадений в реальном времени
-document.getElementById('licensePlate').addEventListener('input', (event) => {
-    const licensePlate = event.target.value;
-    const results = searchCountry(licensePlate);
-    const resultList = document.getElementById('resultList');
-    resultList.innerHTML = ''; // Очищаем список перед обновлением
-
-    if (licensePlate.length > 0) {
-        if (results.length > 0) {
-            results.forEach(result => {
-                const li = document.createElement('li');
-                li.textContent = `${result.country}: ${result.format} - ${result.description}`;
-                resultList.appendChild(li);
-            });
-        } else {
-            resultList.innerHTML = '<li>Нет совпадений</li>';
-        }
-    }
-});
-
-// Обработчик кнопки сброса
-document.getElementById('resetButton').addEventListener('click', () => {
-    document.getElementById('licensePlate').value = '';
-    document.getElementById('resultList').innerHTML = '';
-});
-
-// Обработчик кнопки базы данных
-document.getElementById('dbButton').addEventListener('click', () => {
-    alert(JSON.stringify(countriesData, null, 2));
-});
-
-// Загружаем данные при старте приложения
-loadAllData();
+renderKnowledgeBase();
