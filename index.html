@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Определение страны по номеру автомобиля</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Поиск по базе масок</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Определение страны по номеру автомобиля</h1>
-        <input type="text" id="licensePlate" placeholder="Введите номер автомобиля">
-        <button id="resetButton">Сбросить</button>
-        <button id="dbButton" onclick="window.location.href='database.html'">База данных</button>
-        <ul id="resultList"></ul>
-    </div>
+  <div class="container">
+    <h1>Поиск по маске</h1>
+    <input type="text" id="search" placeholder="Введите строку..." />
+    <div id="results"></div>
+    <h2>База знаний</h2>
+    <div id="knowledge-base"></div>
+  </div>
 
-    <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
