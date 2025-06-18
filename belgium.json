@@ -1,0 +1,17 @@
+{
+    "country": "Бельгия",
+    "formats": [
+        {
+            "format": "1-ABC-123",
+            "description": "1 цифра, 3 буквы, 3 цифры"
+        },
+        {
+            "format": "AB-123-CD",
+            "description": "2 буквы, 3 цифры, 2 буквы"
+        },
+        {
+            "format": "123-ABC-4",
+            "description": "3 цифры, 3 буквы, 1 цифра"
+        }
+    ]
+}
