@@ -23,6 +23,7 @@ function renderCountryList(countryList) {
     });
 }
 
+// Улучшенный поиск по номерам
 document.getElementById('searchInput').addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
     const filteredCountries = Object.keys(countriesData).filter(country =>
