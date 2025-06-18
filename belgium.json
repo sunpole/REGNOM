@@ -2,16 +2,16 @@
     "country": "Бельгия",
     "formats": [
         {
-            "format": "1-ABC-123",
-            "description": "1 цифра, 3 буквы, 3 цифры"
+            "format": "X-0000-X",
+            "description": "1 буква, 4 цифры, 1 буква"
         },
         {
-            "format": "AB-123-CD",
-            "description": "2 буквы, 3 цифры, 2 буквы"
+            "format": "XX-0000",
+            "description": "2 буквы, 4 цифры"
         },
         {
-            "format": "123-ABC-4",
-            "description": "3 цифры, 3 буквы, 1 цифра"
+            "format": "0X0000",
+            "description": "1 цифра, 1 буква, 4 цифры"
         }
     ]
 }
