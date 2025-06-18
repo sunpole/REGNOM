@@ -14,14 +14,25 @@ async function loadAllData() {
     }
 }
 
+// Функция для создания регулярного выражения из формата
+function createRegex(format) {
+    return new RegExp(format
+        .replace(/1/g, '[0-9]')      // заменяем 1 цифрой
+        .replace(/A/g, '[A-Z]')      // заменяем A на любую заглавную букву
+        .replace(/-/g, '\\-')        // экранируем дефис
+        .toLowerCase());             // делаем нижний регистр
+}
+
 // Функция для поиска совпадений в реальном времени
 function searchCountry(licensePlate) {
     let matches = [];
     
     for (const country in countriesData) {
         const formats = countriesData[country];
+
         formats.forEach(({ format, description }) => {
-            if (format.toLowerCase().includes(licensePlate.toLowerCase())) {
+            const regex = createRegex(format);
+            if (regex.test(licensePlate.toLowerCase())) {
                 matches.push({
                     country,
                     format,
@@ -41,12 +52,14 @@ document.getElementById('licensePlate').addEventListener('input', (event) => {
     const resultList = document.getElementById('resultList');
     resultList.innerHTML = ''; // Очищаем список перед обновлением
 
-    if (licensePlate.length > 0) {
+    if (results.length > 0) {
         results.forEach(result => {
             const li = document.createElement('li');
             li.textContent = `${result.country}: ${result.format} - ${result.description}`;
             resultList.appendChild(li);
         });
+    } else if (licensePlate.length > 0) {
+        resultList.innerHTML = '<li>Нет совпадений</li>';
     }
 });
 
