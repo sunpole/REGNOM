@@ -1,5 +1,5 @@
-let countriesData = {}; // Переменная для хранения всех данных
-let allSymbols = {}; // Переменная для хранения символов
+let countriesData = {};
+let allSymbols = {};
 
 // Загружаем символы и форматы стран
 async function loadAllData() {
@@ -17,10 +17,11 @@ async function loadAllData() {
 // Функция для создания регулярного выражения из формата
 function createRegex(format) {
     return new RegExp(format
-        .replace(/1/g, '[0-9]')      // заменяем 1 цифрой
-        .replace(/A/g, '[A-Z]')      // заменяем A на любую заглавную букву
+        .replace(/0/g, '[0-9]')      // заменяем 0 цифрой
+        .replace(/X/g, '[A-Z]')      // заменяем X на любую заглавную букву
         .replace(/-/g, '\\-')        // экранируем дефис
-        .toLowerCase());             // делаем нижний регистр
+        .replace(/\s/g, '[\\s-]?')     // заменяем пробел на пробел или тире
+        .toLowerCase());             // делаем нижний регистр для соответствия
 }
 
 // Функция для поиска совпадений в реальном времени
@@ -32,7 +33,7 @@ function searchCountry(licensePlate) {
 
         formats.forEach(({ format, description }) => {
             const regex = createRegex(format);
-            if (regex.test(licensePlate.toLowerCase())) {
+            if (regex.test(licensePlate.toLowerCase().trim())) {
                 matches.push({
                     country,
                     format,
@@ -52,14 +53,16 @@ document.getElementById('licensePlate').addEventListener('input', (event) => {
     const resultList = document.getElementById('resultList');
     resultList.innerHTML = ''; // Очищаем список перед обновлением
 
-    if (results.length > 0) {
-        results.forEach(result => {
-            const li = document.createElement('li');
-            li.textContent = `${result.country}: ${result.format} - ${result.description}`;
-            resultList.appendChild(li);
-        });
-    } else if (licensePlate.length > 0) {
-        resultList.innerHTML = '<li>Нет совпадений</li>';
+    if (licensePlate.length > 0) {
+        if (results.length > 0) {
+            results.forEach(result => {
+                const li = document.createElement('li');
+                li.textContent = `${result.country}: ${result.format} - ${result.description}`;
+                resultList.appendChild(li);
+            });
+        } else {
+            resultList.innerHTML = '<li>Нет совпадений</li>';
+        }
     }
 });
 
@@ -71,7 +74,7 @@ document.getElementById('resetButton').addEventListener('click', () => {
 
 // Обработчик кнопки базы данных
 document.getElementById('dbButton').addEventListener('click', () => {
-    alert(JSON.stringify(countriesData, null, 2)); // Здесь вы можете отобразить данные другим способом
+    alert(JSON.stringify(countriesData, null, 2));
 });
 
 // Загружаем данные при старте приложения
