@@ -40,11 +40,16 @@ function createRegex(format) {
 // Функция для поиска совпадений в реальном времени
 function searchCountry(licensePlate) {
     let matches = [];
-    
+
     for (const country in countriesData) {
         const formats = countriesData[country];
 
-        formats.forEach(({ format, description }) => {
+        if (!Array.isArray(formats)) {
+            console.warn(`Некорректные данные форматов для страны ${country}:`, formats);
+            continue;
+        }
+
+        formats.forEach(format => {
             const regex = createRegex(format);
             console.log(`Проверка формата: ${format} с регулярным выражением: ${regex}`);
 
@@ -52,7 +57,7 @@ function searchCountry(licensePlate) {
                 matches.push({
                     country,
                     format,
-                    description,
+                    description: '' // Описание отсутствует в текущем формате данных
                 });
                 console.log(`Найдено совпадение: ${country} - ${format}`);
             }
@@ -61,6 +66,7 @@ function searchCountry(licensePlate) {
 
     return matches;
 }
+
 
 // Обновление списка совпадений в реальном времени
 document.getElementById('licensePlate').addEventListener('input', (event) => {
