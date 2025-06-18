@@ -1,0 +1,13 @@
+{
+    "country": "Германия",
+    "formats": [
+        {
+            "format": "B-AB-1234",
+            "description": "1 буква, 2 буквы, 4 цифры"
+        },
+        {
+            "format": "AB-123-CD",
+            "description": "2 буквы, 3 цифры, 2 буквы"
+        }
+    ]
+}
