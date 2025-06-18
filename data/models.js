@@ -1,6 +1,6 @@
 // data/models.js
 
-const MODELS = {
+export const MODELS = {
   A: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   B: 'ABCDEFGHIJKLMNOPQRSTUVWXYZâÇçĞğİıîÖöŞşÜüéàèûôœñáíú¿¡ºªãõÄäÜßëîìòøæØå',
   C: ['-', ' ', ''], // тире, пробел, без символа
