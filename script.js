@@ -1,22 +1,25 @@
+// script.js
+
 import { MODELS } from './data/models.js';
 import { countryDatabase } from './data/countries.js';
 
 const MIN_INPUT_LENGTH = 2;
+const warnings = new Set();
 
 /**
  * Экранирует спецсимволы для RegExp.
  */
 function escapeRegExp(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return str.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
 }
 
 /**
  * Преобразует маску в регулярное выражение.
- * Использует все модели из MODELS. Сообщает об ошибках, если в маске есть неизвестный символ.
  */
 function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '') {
   let regexStr = '^';
   const len = partialLength || mask.length;
+  let hasUnknownModel = false;
 
   for (let i = 0; i < mask.length && i < len; i++) {
     const char = mask[i];
@@ -28,15 +31,13 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
         regexStr += `[${escaped}]?`;
       } else if (typeof model === 'string') {
         regexStr += `[${escapeRegExp(model)}]`;
-      } else {
-        console.warn(`[model] Неподдерживаемая модель: ${char} в "${mask}"`);
       }
     } else {
-      // Проверка, не является ли это обычным символом (например, '-')
       if (/^[a-zA-Z0-9]$/.test(char)) {
-        console.error(
-          `[model] ❌ Неизвестный символ-модель "${char}" в маске "${mask}" (${groupType}) страны ${countryCode}`
-        );
+        const message = `\u26A0 \u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u0441\u0438\u043C\u0432\u043E\u043B-\u043C\u043E\u0434\u0435\u043B\u044C "${char}" \u0432 \u043C\u0430\u0441\u043A\u0435 "${mask}" (${groupType}) \u0441\u0442\u0440\u0430\u043D\u044B ${countryCode}`;
+        console.error(`[model] ${message}`);
+        warnings.add(message);
+        hasUnknownModel = true;
       }
       regexStr += escapeRegExp(char);
     }
@@ -46,17 +47,16 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
     regexStr += '$';
   }
 
+  if (hasUnknownModel) return null;
+
   try {
     return new RegExp(regexStr, 'i');
   } catch (e) {
-    console.error(`❌ Ошибка RegExp из маски "${mask}" → ${regexStr}`, e);
+    console.error(`\u274C \u041E\u0448\u0438\u0431\u043A\u0430 RegExp \u0438\u0437 \u043C\u0430\u0441\u043A\u0438 "${mask}" → ${regexStr}`, e);
     return null;
   }
 }
 
-/**
- * Обработчик поиска.
- */
 function handleSearch(inputValue) {
   const input = inputValue.trim();
   const resultsElement = document.getElementById('results');
@@ -64,11 +64,9 @@ function handleSearch(inputValue) {
 
   if (input.length < MIN_INPUT_LENGTH) {
     resultsElement.innerHTML = `<p>Введите минимум ${MIN_INPUT_LENGTH} символа(ов)</p>`;
-    console.info(`[input] Недостаточно символов (${input.length})`);
     return;
   }
 
-  console.log(`[input] Введено: "${input}" (${input.length})`);
   const matches = [];
 
   for (const country of countryDatabase) {
@@ -76,18 +74,12 @@ function handleSearch(inputValue) {
 
     for (const group of country.groups) {
       for (const mask of group.masks) {
-        if (input.length > mask.length) {
-          console.log(`[skip] Пропуск: "${input}" длиннее маски "${mask}"`);
-          continue;
-        }
-
+        if (input.length > mask.length) continue;
         const regex = maskToRegex(mask, input.length, country.code, group.type);
         if (!regex) continue;
 
         if (regex.test(input)) {
-          const message = `<b>${input}</b> совпадает с <code>${mask}</code> (${group.type_en} / ${country.name})`;
-          matches.push(message);
-          console.log(`[match] ✔ ${input} ↔ ${mask} [${country.code}]`);
+          matches.push(`<b>${input}</b> совпадает с <code>${mask}</code> (${group.type_en} / ${country.name})`);
         }
       }
     }
@@ -97,12 +89,9 @@ function handleSearch(inputValue) {
     ? `<ul>${matches.map(m => `<li>${m}</li>`).join('')}</ul>`
     : `<p>Ничего не найдено</p>`;
 
-  console.info(`[result] Найдено совпадений: ${matches.length}`);
+  renderWarnings();
 }
 
-/**
- * Отрисовка базы знаний.
- */
 function renderKnowledgeBase() {
   const container = document.getElementById('knowledge-base');
   container.innerHTML = '';
@@ -125,22 +114,30 @@ function renderKnowledgeBase() {
 
     container.appendChild(div);
   }
-
-  console.log(`[render] Загружено стран: ${countryDatabase.length}`);
 }
 
-/**
- * Инициализация
- */
+function renderWarnings() {
+  const warningBox = document.getElementById('warnings');
+  if (!warningBox) return;
+
+  if (warnings.size > 0) {
+    warningBox.innerHTML = `<div class="warning-list">
+      <p><b>\u26A0 Обнаружены ошибки в масках стран:</b></p>
+      <ul>${Array.from(warnings).map(w => `<li>${w}</li>`).join('')}</ul>
+    </div>`;
+  } else {
+    warningBox.innerHTML = '';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderKnowledgeBase();
+  renderWarnings();
 
   const input = document.getElementById('search');
   if (input) {
     input.addEventListener('input', () => {
       handleSearch(input.value);
     });
-  } else {
-    console.warn('❗ Поле ввода #search не найдено в DOM');
-});
+  }
 });
