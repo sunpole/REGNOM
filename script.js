@@ -180,19 +180,26 @@ function renderKnowledgeBase() {
       </div>
     `).join('');
 
-    // Дополнительная информация (если есть)
-    const flagStatus = country.flagStatus
-      ? `<span class="flag-status">[${country.flagStatus}]</span>`
-      : '';
+    // Классы для флага: в зависимости от значения
+    let flagHTML = '';
+    if (country.flagStatus) {
+      const status = country.flagStatus.toLowerCase();
+      const statusClass = status === 'тестовый'
+        ? 'flag-status flag-status-test'
+        : 'flag-status flag-status-real';
 
-    const lastUpdated = country.lastUpdated
+      flagHTML = `<span class="${statusClass}">${country.flagStatus}</span>`;
+    }
+
+    // Дата обновления (если есть)
+    const lastUpdatedHTML = country.lastUpdated
       ? `<span class="last-updated">Обновлено: ${country.lastUpdated}</span>`
       : '';
 
     div.innerHTML = `
       <h3>
         ${country.name} <small>(${country.code})</small>
-        ${flagStatus} ${lastUpdated}
+        ${flagHTML} ${lastUpdatedHTML}
       </h3>
       ${groupsHTML}
     `;
@@ -200,6 +207,7 @@ function renderKnowledgeBase() {
     container.appendChild(div);
   }
 }
+
 
 
 /**
