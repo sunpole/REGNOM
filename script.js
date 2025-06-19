@@ -8,7 +8,7 @@ import { countryDatabase } from './data/countries.js';
 const MIN_INPUT_LENGTH = 2; // <=== настройка длины начала поиска
 
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\__CODE_BLOCK_0__');
 }
 
 /**
@@ -24,8 +24,8 @@ function maskToRegex(mask, partialLength = null) {
 
   for (let i = 0; i < mask.length && i < length; i++) {
     const char = mask[i];
-    if (char === 'A') {
-      regexStr += `[${MODELS.A}]`;
+    if (char === 'D') {
+      regexStr += `[${MODELS.D}]`; // белорусские буквы
     } else if (char === '9') {
       regexStr += `[${MODELS['9']}]`;
     } else if (char === 'c') {
@@ -36,7 +36,7 @@ function maskToRegex(mask, partialLength = null) {
   }
 
   if (!partialLength) {
-    regexStr += '$';
+    regexStr += ';
   }
 
   return new RegExp(regexStr, 'i');
@@ -58,16 +58,18 @@ document.getElementById('search').addEventListener('input', function () {
   }
 
   for (const country of countryDatabase) {
-    for (const mask of country.masks) {
-      // Проверка длины ввода относительно маски
-      if (input.length > mask.length) {
-        continue; // Пропустите маску, если длина ввода больше длины маски
-      }
+    for (const group of country.groups) {
+      for (const mask of group.masks) {
+        // Проверка длины ввода относительно маски
+        if (input.length > mask.length) {
+          continue; // Пропустите маску, если длина ввода больше длины маски
+        }
 
-      // Проверка по укороченной регулярке (по длине ввода)
-      const regex = maskToRegex(mask, input.length);
-      if (regex.test(input)) {
-        output.push(`<b>${input}</b> может соответствовать <code>${mask}</code> в стране <i>${country.name}</i>`);
+        // Проверка по укороченной регулярке (по длине ввода)
+        const regex = maskToRegex(mask, input.length);
+        if (regex.test(input)) {
+          output.push(`<b>${input}</b> может соответствовать <code>${mask}</code> в группе <i>${group.type_en}</i> в стране <i>${country.name}</i>`);
+        }
       }
     }
   }
@@ -88,8 +90,12 @@ function renderKnowledgeBase() {
     div.className = 'country-block';
     div.innerHTML = `
       <h3>${country.name} (${country.code})</h3>
-      <p><b>Маски:</b> ${country.masks.map(m => `<code>${m}</code>`).join(', ')}</p>
-      <p><b>Рекомендуемые форматы:</b> ${country.recommended.map(r => `<code>${r}</code>`).join(', ')}</p>
+      ${country.groups.map(group => `
+        <div class="group-block">
+          <h4>${group.type} (${group.type_en})</h4>
+          <p><b>Маски:</b> ${group.masks.map(m => `<code>${m}</code>`).join(', ')}</p>
+        </div>
+      `).join('')}
     `;
     container.appendChild(div);
   });
