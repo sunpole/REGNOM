@@ -26,6 +26,23 @@ function isValidInput(input) {
   return VALID_INPUT_REGEX.test(input);
 }
 
+/**
+ * Показывает предупреждение, если ввод содержит запрещённые символы.
+ * Возвращает true, если ввод валиден, иначе false.
+ */
+function handleInputValidation(inputValue) {
+  const warningElement = document.getElementById('input-warning');
+  if (!warningElement) return true; // Если элемента нет — пропускаем проверку
+
+  if (!isValidInput(inputValue)) {
+    warningElement.innerHTML = '<p style="color:red;">Пожалуйста, вводите только латинские буквы, цифры и допустимые спецсимволы. Кириллица и другие алфавиты не поддерживаются.</p>';
+    return false;
+  } else {
+    warningElement.innerHTML = '';
+    return true;
+  }
+}
+
 function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '') {
   // Нормализуем маску — убираем пробелы и дефисы, которые не влияют на структуру
   const normalizedMask = mask.replace(/[\s-]+/g, '');
@@ -142,6 +159,9 @@ function handleSearch(inputValue) {
 
   renderWarnings();
 }
+
+// ... остальной код renderKnowledgeBase, renderWarnings, DOMContentLoaded и т.п.
+
 
 
 /**
