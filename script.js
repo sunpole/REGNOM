@@ -161,6 +161,7 @@ function handleSearch(inputValue) {
 
 /**
  * Отрисовка всей базы знаний в DOM.
+ * Поддерживает вывод: названия, кода страны, статуса данных и даты последнего обновления.
  */
 function renderKnowledgeBase() {
   const container = document.getElementById('knowledge-base');
@@ -179,14 +180,27 @@ function renderKnowledgeBase() {
       </div>
     `).join('');
 
+    // Дополнительная информация (если есть)
+    const flagStatus = country.flagStatus
+      ? `<span class="flag-status">[${country.flagStatus}]</span>`
+      : '';
+
+    const lastUpdated = country.lastUpdated
+      ? `<span class="last-updated">Обновлено: ${country.lastUpdated}</span>`
+      : '';
+
     div.innerHTML = `
-      <h3>${country.name} <small>(${country.code})</small></h3>
+      <h3>
+        ${country.name} <small>(${country.code})</small>
+        ${flagStatus} ${lastUpdated}
+      </h3>
       ${groupsHTML}
     `;
 
     container.appendChild(div);
   }
 }
+
 
 /**
  * Отрисовка предупреждений о неизвестных моделях.
