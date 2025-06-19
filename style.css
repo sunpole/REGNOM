@@ -1,4 +1,4 @@
-/* === CSS: Базовые переменные и цветовая схема === */
+/* === CSS: Переменные (тема, шрифт, отступы, анимации) === */
 :root {
   /* Цвета */
   --color-bg: #f3f4f6;
@@ -9,20 +9,28 @@
   --color-border: #d1d5db;
   --color-code-bg: #e5e7eb;
   --color-highlight: #facc15;
+  --color-red: #b91c1c;
+  --color-red-border: #ef4444;
+  --color-green: #15803d;
+  --color-green-border: #22c55e;
+  --color-yellow-border: #fde68a;
+  --color-yellow-bg: #2b2b1b;
+  --color-red-bg: #261c1c;
 
   /* Шрифты */
   --font-main: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'Fira Code', 'Courier New', monospace;
 
-  /* Размеры */
+  /* Размеры и отступы */
   --radius: 0.5rem;
   --padding: 1rem;
   --padding-sm: 0.5rem;
   --gap: 1rem;
   --max-width: 1100px;
+  --search-section-height: 210px; /* высота фиксированного блока поиска */
 
-  /* Высота фиксированного блока сверху */
-  --search-section-height: 210px; /* пример высоты, подогнать под твой контент */
+  /* Анимации */
+  --blink-speed: 1s;
 }
 
 /* === Сброс и базовые стили === */
@@ -43,7 +51,7 @@ body {
   margin: 0 auto;
 }
 
-/* Фиксируем верхний блок с поиском */
+/* === Фиксированный верхний блок поиска === */
 #search-section {
   position: fixed;
   top: 0;
@@ -53,15 +61,16 @@ body {
   max-width: var(--max-width);
   background-color: var(--color-bg);
   padding: var(--padding);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
 
-/* Отступ для main, чтобы контент не ушёл под фиксированный блок */
+/* Отступ для контента под фикс-блок */
 main {
   padding-top: var(--search-section-height);
 }
 
+/* === Заголовки === */
 h1, h2, h3, h4 {
   margin-bottom: 0.5em;
   line-height: 1.2;
@@ -76,6 +85,7 @@ h2 {
   margin-top: 2rem;
 }
 
+/* === Поле поиска === */
 input#search {
   font-size: 1rem;
   padding: var(--padding-sm);
@@ -93,7 +103,7 @@ input#search:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
 }
 
-/* === Блок с результатами === */
+/* === Результаты и предупреждения === */
 #results, #warnings {
   margin-bottom: var(--gap);
   font-size: 1rem;
@@ -108,7 +118,7 @@ input#search:focus {
   margin-bottom: 0.5em;
 }
 
-/* === Страны и группы === */
+/* === Отображение страны и группы === */
 .country-block {
   background: white;
   border: 1px solid var(--color-border);
@@ -118,17 +128,16 @@ input#search:focus {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
 }
 
-/* Ограничиваем высоту каталога и добавляем прокрутку */
-#knowledge-base {
-  max-height: calc(100vh - var(--search-section-height) - 60px); /* 60px — запас под отступы и заголовки */
-  overflow-y: auto;
-  padding-right: 0.5rem; /* для скроллбара */
-}
-
 .group-block {
   margin-top: var(--padding-sm);
   padding-left: var(--padding-sm);
   border-left: 3px solid var(--color-primary);
+}
+
+#knowledge-base {
+  max-height: calc(100vh - var(--search-section-height) - 60px);
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 code {
@@ -139,29 +148,7 @@ code {
   font-size: 0.95em;
 }
 
-
-/* Новые стили для результатов поиска по странам с чередованием */
-.country-result {
-  padding: var(--padding-sm);
-  margin-bottom: var(--gap);
-  border: 1px solid;
-  border-radius: var(--radius);
-}
-
-.country-result-0 {
-  border-color: #f87171; /* красный светлый (пример) */
-  background-color: #261C1C; /* красный фон */
-}
-
-.country-result-1 {
-  border-color: #fde68a; /* жёлтый светлый */
-  background-color: #2B2B1B; /* жёлтый фон */
-}
-
-
-/* === Статус флага проверки страны === */
-
-/* Общий стиль */
+/* === Спец.индикаторы: статус данных и дата === */
 .flag-status {
   font-weight: bold;
   padding: 0.2em 0.4em;
@@ -172,30 +159,45 @@ code {
   margin-left: 1rem;
 }
 
-/* Статус: Тестовый */
 .flag-status-test {
-  color: #b91c1c; /* насыщенный красный */
-  border-color: #ef4444;
-  animation: blink-red 1s infinite;
+  color: var(--color-red);
+  border-color: var(--color-red-border);
+  animation: blink-red var(--blink-speed) infinite;
 }
 
-/* Статус: Проверено */
 .flag-status-real {
-  color: #15803d; /* насыщенный зелёный */
-  border-color: #22c55e;
+  color: var(--color-green);
+  border-color: var(--color-green-border);
 }
 
-/* Анимация мигания для "тестового" */
 @keyframes blink-red {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
+.last-updated {
+  margin-left: 1rem;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
 
+/* === Результаты поиска по странам с чередованием цветов === */
+.country-result {
+  padding: var(--padding-sm);
+  margin-bottom: var(--gap);
+  border: 1px solid;
+  border-radius: var(--radius);
+}
+
+.country-result-0 {
+  border-color: var(--color-red-border);
+  background-color: var(--color-red-bg);
+}
+
+.country-result-1 {
+  border-color: var(--color-yellow-border);
+  background-color: var(--color-yellow-bg);
+}
 
 /* === Адаптивность === */
 @media (max-width: 768px) {
@@ -227,7 +229,7 @@ code {
   }
 }
 
-/* === Тёмная тема (авто) === */
+/* === Тёмная тема (автоматическая) === */
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg: #111827;
