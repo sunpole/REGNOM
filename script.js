@@ -108,7 +108,8 @@ function handleSearch(inputValue) {
     return;
   }
 
-  const matches = [];
+  // Группируем совпадения по коду страны
+  const matchesByCountry = {};
 
   for (const country of countryDatabase) {
     if (!Array.isArray(country.groups)) continue;
@@ -121,18 +122,42 @@ function handleSearch(inputValue) {
         if (!regex) continue;
 
         if (regex.test(input)) {
-          matches.push(`<b>${input}</b> совпадает с <code>${mask}</code> (${group.type_en} / ${country.name})`);
+          if (!matchesByCountry[country.code]) {
+            matchesByCountry[country.code] = {
+              countryName: country.name,
+              items: []
+            };
+          }
+          matchesByCountry[country.code].items.push(
+            `<li><b>${input}</b> совпадает с <code>${mask}</code> (${group.type_en} / ${country.name})</li>`
+          );
         }
       }
     }
   }
 
-  resultsElement.innerHTML = matches.length
-    ? `<ul>${matches.map(m => `<li>${m}</li>`).join('')}</ul>`
-    : `<p>Ничего не найдено</p>`;
+  if (Object.keys(matchesByCountry).length === 0) {
+    resultsElement.innerHTML = `<p>Ничего не найдено</p>`;
+    return;
+  }
+
+  // Формируем html с группировкой по странам и чередованием классов
+  const html = Object.entries(matchesByCountry)
+    .map(([code, data], i) => `
+      <div class="country-result country-result-${i % 2}">
+        <h3>${data.countryName} (${code})</h3>
+        <ul>
+          ${data.items.join('')}
+        </ul>
+      </div>
+    `)
+    .join('');
+
+  resultsElement.innerHTML = html;
 
   renderWarnings();
 }
+
 
 /**
  * Отрисовка всей базы знаний в DOM.
