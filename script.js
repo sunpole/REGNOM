@@ -26,29 +26,16 @@ function isValidInput(input) {
   return VALID_INPUT_REGEX.test(input);
 }
 
-/**
- * Показывает предупреждение, если ввод содержит запрещённые символы.
- * Возвращает true, если ввод валиден, иначе false.
- */
-function handleInputValidation(inputValue) {
-  const warningElement = document.getElementById('input-warning');
-  if (!warningElement) return true; // Если элемента нет — пропускаем проверку
-
-  if (!isValidInput(inputValue)) {
-    warningElement.innerHTML = '<p style="color:red;">Пожалуйста, вводите только латинские буквы, цифры и допустимые спецсимволы. Кириллица и другие алфавиты не поддерживаются.</p>';
-    return false;
-  } else {
-    warningElement.innerHTML = '';
-    return true;
-  }
-}
 function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '') {
+  // Нормализуем маску — убираем пробелы и дефисы, которые не влияют на структуру
+  const normalizedMask = mask.replace(/[\s-]+/g, '');
+
   let regexStr = '^';
-  const len = partialLength ?? mask.length;
+  const len = partialLength ?? normalizedMask.length;
   let hasUnknownModel = false;
 
-  for (let i = 0; i < mask.length && i < len; i++) {
-    const char = mask[i];
+  for (let i = 0; i < normalizedMask.length && i < len; i++) {
+    const char = normalizedMask[i];
 
     if (Object.prototype.hasOwnProperty.call(MODELS, char)) {
       const model = MODELS[char];
@@ -73,8 +60,8 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
       regexStr += escapeRegExp(char);
     }
 
-    // Заменено: любое количество пробелов или дефисов
-    regexStr += '[ -]*';
+    // Позволяем любое количество пробелов или дефисов между символами
+    regexStr += '[\\s-]*';
   }
 
   if (!partialLength) {
@@ -93,7 +80,7 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
 
 function handleSearch(inputValue) {
   const input = inputValue.trim();
-  const normalizedInput = input.replace(/[\s-]+/g, ''); // Убираем пробелы и тире
+  const normalizedInput = input.replace(/[\s-]+/g, ''); // Для проверки длины
 
   const resultsElement = document.getElementById('results');
   if (!resultsElement) return;
@@ -119,7 +106,8 @@ function handleSearch(inputValue) {
         const regex = maskToRegex(mask, input.length, country.code, group.type);
         if (!regex) continue;
 
-        if (regex.test(normalizedInput)) {
+        // Проверяем исходный ввод (с пробелами и тире) по регэкспу, который допускает пробелы/тире
+        if (regex.test(input)) {
           if (!matchesByCountry[country.code]) {
             matchesByCountry[country.code] = {
               countryName: country.name,
