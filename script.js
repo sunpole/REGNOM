@@ -10,31 +10,42 @@ const warnings = new Set();
  * Экранирует спецсимволы для RegExp.
  */
 function escapeRegExp(str) {
-  return str.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
+  // Экранируем спецсимволы для корректного использования в RegExp
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
  * Преобразует маску в регулярное выражение.
+ * partialLength — длина частичного сравнения (например, длина ввода).
  */
 function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '') {
   let regexStr = '^';
-  const len = partialLength || mask.length;
+  const len = partialLength ?? mask.length; // если partialLength = null/undefined, берем всю длину
   let hasUnknownModel = false;
 
   for (let i = 0; i < mask.length && i < len; i++) {
     const char = mask[i];
 
-    if (MODELS.hasOwnProperty(char)) {
+    // Проверяем, есть ли символ в модели
+    if (Object.prototype.hasOwnProperty.call(MODELS, char)) {
       const model = MODELS[char];
+
       if (Array.isArray(model)) {
+        // Несколько вариантов символов для данного шаблона, берем любой из них
         const escaped = model.map(c => escapeRegExp(c)).join('');
-        regexStr += `[${escaped}]?`;
+        regexStr += `[${escaped}]?`; // символ необязательный (по вашему примеру)
       } else if (typeof model === 'string') {
         regexStr += `[${escapeRegExp(model)}]`;
+      } else {
+        // Если модель не строка и не массив — ошибка
+        console.warn(`Неожиданный тип модели для символа '${char}' в маске "${mask}"`);
+        regexStr += escapeRegExp(char);
       }
+
     } else {
+      // Если символ не в MODELS, проверяем — это ли ошибка?
       if (/^[a-zA-Z0-9]$/.test(char)) {
-        const message = `\u26A0 \u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u0441\u0438\u043C\u0432\u043E\u043B-\u043C\u043E\u0434\u0435\u043B\u044C "${char}" \u0432 \u043C\u0430\u0441\u043A\u0435 "${mask}" (${groupType}) \u0441\u0442\u0440\u0430\u043D\u044B ${countryCode}`;
+        const message = `⚠ Неизвестный символ-модель "${char}" в маске "${mask}" (${groupType}) страны ${countryCode}`;
         console.error(`[model] ${message}`);
         warnings.add(message);
         hasUnknownModel = true;
@@ -44,7 +55,7 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
   }
 
   if (!partialLength) {
-    regexStr += '$';
+    regexStr += '$'; // конец строки, если полный матч
   }
 
   if (hasUnknownModel) return null;
@@ -52,14 +63,19 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
   try {
     return new RegExp(regexStr, 'i');
   } catch (e) {
-    console.error(`\u274C \u041E\u0448\u0438\u0431\u043A\u0430 RegExp \u0438\u0437 \u043C\u0430\u0441\u043A\u0438 "${mask}" → ${regexStr}`, e);
+    console.error(`❌ Ошибка RegExp из маски "${mask}" → ${regexStr}`, e);
     return null;
   }
 }
 
+/**
+ * Обработка поиска по введенному значению.
+ */
 function handleSearch(inputValue) {
   const input = inputValue.trim();
   const resultsElement = document.getElementById('results');
+  if (!resultsElement) return;
+
   resultsElement.innerHTML = '';
 
   if (input.length < MIN_INPUT_LENGTH) {
@@ -74,7 +90,10 @@ function handleSearch(inputValue) {
 
     for (const group of country.groups) {
       for (const mask of group.masks) {
+        // Если длина ввода больше длины маски — не подходит
         if (input.length > mask.length) continue;
+
+        // Создаем RegExp для частичного совпадения
         const regex = maskToRegex(mask, input.length, country.code, group.type);
         if (!regex) continue;
 
@@ -92,8 +111,13 @@ function handleSearch(inputValue) {
   renderWarnings();
 }
 
+/**
+ * Отрисовка всей базы знаний в DOM.
+ */
 function renderKnowledgeBase() {
   const container = document.getElementById('knowledge-base');
+  if (!container) return;
+
   container.innerHTML = '';
 
   for (const country of countryDatabase) {
@@ -116,13 +140,16 @@ function renderKnowledgeBase() {
   }
 }
 
+/**
+ * Отрисовка предупреждений о неизвестных моделях.
+ */
 function renderWarnings() {
   const warningBox = document.getElementById('warnings');
   if (!warningBox) return;
 
   if (warnings.size > 0) {
     warningBox.innerHTML = `<div class="warning-list">
-      <p><b>\u26A0 Обнаружены ошибки в масках стран:</b></p>
+      <p><b>⚠ Обнаружены ошибки в масках стран:</b></p>
       <ul>${Array.from(warnings).map(w => `<li>${w}</li>`).join('')}</ul>
     </div>`;
   } else {
