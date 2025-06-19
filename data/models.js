@@ -6,8 +6,9 @@
 // Модель 9 — цифры
 
 export const MODELS = {
-  A: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-  B: 'ABCDEFGHIJKLMNOPQRSTUVWXYZâÇçĞğİıîÖöŞşÜüéàèûôœñáíú¿¡ºªãõÄäÜßëîìòøæØå',
+  A: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', // латиница
+  B: 'ABCDEFGHIJKLMNOPQRSTUVWXYZâÇçĞğİıîÖöŞşÜüéàèûôœñáíú¿¡ºªãõÄäÜßëîìòøæØå', // латиница + диакритика 
   C: ['-', ' '], // пустой символ обработан в regex как опциональность
-  9: '0123456789'
+  D: 'АВЕІКМНОРСТХ',  // беларусь
+  9: '0123456789' // цифры 
 };
