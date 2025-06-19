@@ -42,11 +42,6 @@ function handleInputValidation(inputValue) {
     return true;
   }
 }
-
-/**
- * Преобразует маску в регулярное выражение.
- * partialLength — длина частичного сравнения (например, длина ввода).
- */
 function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '') {
   let regexStr = '^';
   const len = partialLength ?? mask.length;
@@ -78,8 +73,8 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
       regexStr += escapeRegExp(char);
     }
 
-    // После каждого символа маски добавляем необязательный разделитель: пробел или дефис или ничего
-    regexStr += '[ -]?';
+    // Заменено: любое количество пробелов или дефисов
+    regexStr += '[ -]*';
   }
 
   if (!partialLength) {
@@ -96,23 +91,20 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
   }
 }
 
-
-/**
- * Обработка поиска по введенному значению.
- */
 function handleSearch(inputValue) {
   const input = inputValue.trim();
+  const normalizedInput = input.replace(/[\s-]+/g, ''); // Убираем пробелы и тире
+
   const resultsElement = document.getElementById('results');
   if (!resultsElement) return;
 
   resultsElement.innerHTML = '';
 
-  if (input.length < MIN_INPUT_LENGTH) {
+  if (normalizedInput.length < MIN_INPUT_LENGTH) {
     resultsElement.innerHTML = `<p>Введите минимум ${MIN_INPUT_LENGTH} символа(ов)</p>`;
     return;
   }
 
-  // Группируем совпадения по коду страны
   const matchesByCountry = {};
 
   for (const country of countryDatabase) {
@@ -120,12 +112,14 @@ function handleSearch(inputValue) {
 
     for (const group of country.groups) {
       for (const mask of group.masks) {
-        if (input.length > mask.length) continue;
+        const normalizedMask = mask.replace(/[\s-]+/g, '');
+
+        if (normalizedInput.length > normalizedMask.length) continue;
 
         const regex = maskToRegex(mask, input.length, country.code, group.type);
         if (!regex) continue;
 
-        if (regex.test(input)) {
+        if (regex.test(normalizedInput)) {
           if (!matchesByCountry[country.code]) {
             matchesByCountry[country.code] = {
               countryName: country.name,
@@ -145,7 +139,6 @@ function handleSearch(inputValue) {
     return;
   }
 
-  // Формируем html с группировкой по странам и чередованием классов
   const html = Object.entries(matchesByCountry)
     .map(([code, data], i) => `
       <div class="country-result country-result-${i % 2}">
@@ -161,6 +154,7 @@ function handleSearch(inputValue) {
 
   renderWarnings();
 }
+
 
 /**
  * Отрисовка всей базы знаний в DOM.
