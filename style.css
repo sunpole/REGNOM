@@ -159,6 +159,44 @@ code {
 }
 
 
+/* === Статус флага проверки страны === */
+
+/* Общий стиль */
+.flag-status {
+  font-weight: bold;
+  padding: 0.2em 0.4em;
+  border-radius: var(--radius);
+  font-size: 0.85em;
+  border: 1px solid;
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+/* Статус: Тестовый */
+.flag-status-test {
+  color: #b91c1c; /* насыщенный красный */
+  border-color: #ef4444;
+  animation: blink-red 1s infinite;
+}
+
+/* Статус: Проверено */
+.flag-status-real {
+  color: #15803d; /* насыщенный зелёный */
+  border-color: #22c55e;
+}
+
+/* Анимация мигания для "тестового" */
+@keyframes blink-red {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+
+
 /* === Адаптивность === */
 @media (max-width: 768px) {
   h1 {
