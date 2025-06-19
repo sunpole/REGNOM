@@ -4,7 +4,7 @@ export const countryDatabase = [
   {
     name: "🇦🇱 Албания",
     code: "ALB",
-    masks: ["A 9999" "AA 999"],
+    masks: ["A 9999", "AA 999"],
     recommended: ["A-9999"] // Модель A
   },
   {
