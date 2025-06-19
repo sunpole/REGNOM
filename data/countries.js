@@ -4,6 +4,8 @@ export const countryDatabase = [
   {
     name: "🇦🇱 Албания",
     code: "ALB",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили", // Название на русском
@@ -15,6 +17,8 @@ export const countryDatabase = [
   {
     name: "🇦🇩 Андорра",
     code: "AND",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -26,6 +30,8 @@ export const countryDatabase = [
   {
     name: "🇦🇲 Армения",
     code: "ARM",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -37,6 +43,8 @@ export const countryDatabase = [
   {
     name: "🇦🇹 Австрия",
     code: "AUT",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -48,6 +56,8 @@ export const countryDatabase = [
   {
     name: "🇦🇿 Азербайджан",
     code: "AZE",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -59,6 +69,8 @@ export const countryDatabase = [
   {
     name: "🇧🇾 Беларусь",
     code: "BLR",
+    flagStatus: "real", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Грузовые автомобили",
@@ -112,6 +124,8 @@ export const countryDatabase = [
   {
     name: "🇧🇪 Бельгия",
     code: "BEL",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -123,6 +137,8 @@ export const countryDatabase = [
   {
     name: "🇧🇦 Босния и Герцеговина",
     code: "BIH",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -134,6 +150,8 @@ export const countryDatabase = [
   {
     name: "🇧🇬 Болгария",
     code: "BGR",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -145,6 +163,8 @@ export const countryDatabase = [
   {
     name: "🇭🇷 Хорватия",
     code: "HRV",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -156,6 +176,8 @@ export const countryDatabase = [
   {
     name: "🇨🇾 Кипр",
     code: "CYP",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -167,6 +189,8 @@ export const countryDatabase = [
   {
     name: "🇨🇿 Чехия",
     code: "CZE",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -178,6 +202,8 @@ export const countryDatabase = [
   {
     name: "🇩🇰 Дания",
     code: "DNK",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -189,6 +215,8 @@ export const countryDatabase = [
   {
     name: "🇪🇪 Эстония",
     code: "EST",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -200,6 +228,8 @@ export const countryDatabase = [
   {
     name: "🇫🇮 Финляндия",
     code: "FIN",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -211,6 +241,8 @@ export const countryDatabase = [
   {
     name: "🇫🇷 Франция",
     code: "FRA",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -222,6 +254,8 @@ export const countryDatabase = [
   {
     name: "🇬🇪 Грузия",
     code: "GEO",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -233,6 +267,8 @@ export const countryDatabase = [
   {
     name: "🇩🇪 Германия",
     code: "DEU",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -244,6 +280,8 @@ export const countryDatabase = [
   {
     name: "🇬🇷 Греция",
     code: "GRC",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -255,6 +293,8 @@ export const countryDatabase = [
   {
     name: "🇭🇺 Венгрия",
     code: "HUN",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -266,6 +306,8 @@ export const countryDatabase = [
   {
     name: "🇮🇸 Исландия",
     code: "ISL",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -277,6 +319,8 @@ export const countryDatabase = [
   {
     name: "🇮🇪 Ирландия",
     code: "IRL",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -288,6 +332,8 @@ export const countryDatabase = [
   {
     name: "🇮🇹 Италия",
     code: "ITA",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -299,6 +345,8 @@ export const countryDatabase = [
   {
     name: "🇰🇿 Казахстан",
     code: "KAZ",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -310,6 +358,8 @@ export const countryDatabase = [
   {
     name: "🇽🇰 Косово",
     code: "XKX",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -321,6 +371,8 @@ export const countryDatabase = [
   {
     name: "🇱🇻 Латвия",
     code: "LVA",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -332,6 +384,8 @@ export const countryDatabase = [
   {
     name: "🇱🇮 Лихтенштейн",
     code: "LIE",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -343,6 +397,8 @@ export const countryDatabase = [
   {
     name: "🇱🇹 Литва",
     code: "LTU",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -354,6 +410,8 @@ export const countryDatabase = [
   {
     name: "🇱🇺 Люксембург",
     code: "LUX",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -365,6 +423,8 @@ export const countryDatabase = [
   {
     name: "🇲🇹 Мальта",
     code: "MLT",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -376,6 +436,8 @@ export const countryDatabase = [
   {
     name: "🇲🇩 Молдова",
     code: "MDA",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -387,6 +449,8 @@ export const countryDatabase = [
   {
     name: "🇲🇨 Монако",
     code: "MCO",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -398,6 +462,8 @@ export const countryDatabase = [
   {
     name: "🇲🇪 Черногория",
     code: "MNE",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -409,6 +475,8 @@ export const countryDatabase = [
   {
     name: "🇳🇱 Нидерланды",
     code: "NLD",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -420,6 +488,8 @@ export const countryDatabase = [
   {
     name: "🇲🇰 Северная Македония",
     code: "MKD",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -431,6 +501,8 @@ export const countryDatabase = [
   {
     name: "🇳🇴 Норвегия",
     code: "NOR",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -442,6 +514,8 @@ export const countryDatabase = [
   {
     name: "🇵🇱 Польша",
     code: "POL",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -453,6 +527,8 @@ export const countryDatabase = [
   {
     name: "🇵🇹 Португалия",
     code: "PRT",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -464,6 +540,8 @@ export const countryDatabase = [
   {
     name: "🇷🇴 Румыния",
     code: "ROU",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -475,6 +553,8 @@ export const countryDatabase = [
   {
     name: "🇷🇺 Россия",
     code: "RUS",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -486,6 +566,8 @@ export const countryDatabase = [
   {
     name: "🇸🇲 Сан-Марино",
     code: "SMR",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -497,6 +579,8 @@ export const countryDatabase = [
   {
     name: "🇷🇸 Сербия",
     code: "SRB",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -508,6 +592,8 @@ export const countryDatabase = [
   {
     name: "🇸🇰 Словакия",
     code: "SVK",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -519,6 +605,8 @@ export const countryDatabase = [
   {
     name: "🇸🇮 Словения",
     code: "SVN",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -530,6 +618,8 @@ export const countryDatabase = [
   {
     name: "🇪🇸 Испания",
     code: "ESP",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -541,6 +631,8 @@ export const countryDatabase = [
   {
     name: "🇸🇪 Швеция",
     code: "SWE",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -552,6 +644,8 @@ export const countryDatabase = [
   {
     name: "🇨🇭 Швейцария",
     code: "CHE",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -563,6 +657,8 @@ export const countryDatabase = [
   {
     name: "🇺🇦 Украина",
     code: "UKR",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -574,6 +670,8 @@ export const countryDatabase = [
   {
     name: "🇬🇧 Великобритания",
     code: "GBR",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
@@ -585,6 +683,8 @@ export const countryDatabase = [
   {
     name: "🇻🇦 Ватикан",
     code: "VAT",
+    flagStatus: "test", // test / real
+    lastUpdated: "2025-06-19",
     groups: [
       {
         type: "Автомобили",
