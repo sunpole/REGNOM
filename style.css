@@ -20,6 +20,9 @@
   --padding-sm: 0.5rem;
   --gap: 1rem;
   --max-width: 1100px;
+
+  /* Высота фиксированного блока сверху */
+  --search-section-height: 210px; /* пример высоты, подогнать под твой контент */
 }
 
 /* === Сброс и базовые стили === */
@@ -38,6 +41,25 @@ body {
   font-size: 1rem;
   max-width: var(--max-width);
   margin: 0 auto;
+}
+
+/* Фиксируем верхний блок с поиском */
+#search-section {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--max-width);
+  background-color: var(--color-bg);
+  padding: var(--padding);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+/* Отступ для main, чтобы контент не ушёл под фиксированный блок */
+main {
+  padding-top: var(--search-section-height);
 }
 
 h1, h2, h3, h4 {
@@ -94,6 +116,13 @@ input#search:focus {
   padding: var(--padding);
   margin-bottom: var(--gap);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+/* Ограничиваем высоту каталога и добавляем прокрутку */
+#knowledge-base {
+  max-height: calc(100vh - var(--search-section-height) - 60px); /* 60px — запас под отступы и заголовки */
+  overflow-y: auto;
+  padding-right: 0.5rem; /* для скроллбара */
 }
 
 .group-block {
