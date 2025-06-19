@@ -8,17 +8,28 @@
 </head>
 <body>
   <main>
-    <h1>Поиск по маскам - v 0.0.1.2</h1>
-    <input id="search" type="text" placeholder="Введите значение для поиска (например, AB-7 4574)" autocomplete="off" />
+    <h1>Поиск по маскам — v 0.0.1.3</h1>
+
+    <input
+      id="search"
+      type="text"
+      placeholder="Введите значение для поиска (например, AB-7 4574)"
+      autocomplete="off"
+    />
 
     <section id="results" style="margin-top: 1em;">
       <p>Результаты поиска появятся здесь...</p>
+    </section>
+
+    <section id="warnings" style="margin-top: 1em;">
+      <!-- Сюда будут выводиться ошибки: неизвестные модели в масках -->
     </section>
 
     <hr />
 
     <section id="knowledge-base">
       <h2>Каталог базы знаний — страны и маски</h2>
+      <!-- Динамически отрисовывается база данных -->
     </section>
   </main>
 
