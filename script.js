@@ -1,3 +1,5 @@
+//script.js
+
 import { MODELS } from './data/models.js';
 import { countryDatabase } from './data/countries.js';
 
@@ -14,7 +16,7 @@ function escapeRegExp(string) {
 /**
  * Преобразует маску в регулярное выражение.
  * Символы маски:
- *  - A: заглавная латинская буква [A-Z]
+ *  - D: заглавная буква из белорусского алфавита
  *  - 9: цифра [0-9]
  *  - c: символ из модели C (тире, пробел или пустой символ)
  */
@@ -25,15 +27,19 @@ function maskToRegex(mask, partialLength = null) {
   for (let i = 0; i < mask.length && i < length; i++) {
     const char = mask[i];
     if (char === 'D') {
-      regexStr += `[${MODELS.D}]`; // белорусские буквы
+      regexStr += `[${MODELS.D}]`;
     } else if (char === '9') {
       regexStr += `[${MODELS['9']}]`;
     } else if (char === 'c') {
-      regexStr += `[- ]?`; // тире, пробел или ничего
+      regexStr += `[- ]?`; // тире или пробел
     } else {
       regexStr += escapeRegExp(char);
     }
   }
+
+  // Добавление опциональности пробелов и тире в любом месте
+  regexStr = regexStr.replace(/9/g, '(?:[- ]?)[0-9]'); // для цифр
+  regexStr = regexStr.replace(/D/g, '(?:[- ]?)[A-ZА-Я]'); // для букв
 
   if (!partialLength) {
     regexStr += ';
@@ -60,11 +66,6 @@ document.getElementById('search').addEventListener('input', function () {
   for (const country of countryDatabase) {
     for (const group of country.groups) {
       for (const mask of group.masks) {
-        // Проверка длины ввода относительно маски
-        if (input.length > mask.length) {
-          continue; // Пропустите маску, если длина ввода больше длины маски
-        }
-
         // Проверка по укороченной регулярке (по длине ввода)
         const regex = maskToRegex(mask, input.length);
         if (regex.test(input)) {
