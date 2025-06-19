@@ -1,29 +1,162 @@
+/* === CSS: Базовые переменные и цветовая схема === */
+:root {
+  /* Цвета */
+  --color-bg: #f3f4f6;
+  --color-text: #111827;
+  --color-muted: #6b7280;
+  --color-primary: #2563eb;
+  --color-primary-light: #3b82f6;
+  --color-border: #d1d5db;
+  --color-code-bg: #e5e7eb;
+  --color-highlight: #facc15;
+
+  /* Шрифты */
+  --font-main: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Fira Code', 'Courier New', monospace;
+
+  /* Размеры */
+  --radius: 0.5rem;
+  --padding: 1rem;
+  --padding-sm: 0.5rem;
+  --gap: 1rem;
+  --max-width: 1100px;
+}
+
+/* === Сброс и базовые стили === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background: #f9f9f9;
-  color: #222;
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  padding: var(--padding);
+  line-height: 1.6;
+  font-size: 1rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4 {
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
 }
 
 input#search {
-  font-size: 1.1em;
-  padding: 8px;
+  font-size: 1rem;
+  padding: var(--padding-sm);
   width: 100%;
-  max-width: 400px;
-  box-sizing: border-box;
+  max-width: 500px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  margin-bottom: var(--gap);
+  transition: border 0.2s;
 }
 
+input#search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* === Блок с результатами === */
+#results, #warnings {
+  margin-bottom: var(--gap);
+  font-size: 1rem;
+}
+
+#results ul, #warnings ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#results li, #warnings li {
+  margin-bottom: 0.5em;
+}
+
+/* === Страны и группы === */
 .country-block {
   background: white;
-  border: 1px solid #ccc;
-  margin-bottom: 1em;
-  padding: 1em;
-  border-radius: 5px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--padding);
+  margin-bottom: var(--gap);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.group-block {
+  margin-top: var(--padding-sm);
+  padding-left: var(--padding-sm);
+  border-left: 3px solid var(--color-primary);
 }
 
 code {
-  background: #eee;
-  padding: 2px 4px;
-  border-radius: 3px;
-  font-family: monospace;
+  background-color: var(--color-code-bg);
+  border-radius: 0.3rem;
+  padding: 0.2em 0.4em;
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+/* === Адаптивность === */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  h2 {
+    font-size: 1.25rem;
+  }
+  input#search {
+    font-size: 0.95rem;
+  }
+  .country-block {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+  input#search {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+  code {
+    font-size: 0.85rem;
+  }
+}
+
+/* === Тёмная тема (авто) === */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #111827;
+    --color-text: #f9fafb;
+    --color-border: #374151;
+    --color-code-bg: #1f2937;
+    --color-muted: #9ca3af;
+    --color-primary: #60a5fa;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .country-block {
+    background-color: #1e293b;
+  }
 }
