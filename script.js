@@ -59,6 +59,11 @@ document.getElementById('search').addEventListener('input', function () {
 
   for (const country of countryDatabase) {
     for (const mask of country.masks) {
+      // Проверка длины ввода относительно маски
+      if (input.length > mask.length) {
+        continue; // Пропустите маску, если длина ввода больше длины маски
+      }
+
       // Проверка по укороченной регулярке (по длине ввода)
       const regex = maskToRegex(mask, input.length);
       if (regex.test(input)) {
