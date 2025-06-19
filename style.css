@@ -1,37 +1,41 @@
 /* === CSS: Переменные (тема, шрифт, отступы, анимации) === */
 :root {
   /* Цвета */
-  --color-bg: #f3f4f6;
-  --color-text: #111827;
-  --color-muted: #6b7280;
-  --color-primary: #2563eb;
-  --color-primary-light: #3b82f6;
-  --color-border: #d1d5db;
-  --color-code-bg: #e5e7eb;
-  --color-highlight: #facc15;
+  --color-bg-light: #f3f4f6; /* Светлый цвет фона */
+  --color-bg-dark: #111827; /* Тёмный цвет фона */
+  --color-text-light: #111827; /* Цвет текста для светлой темы */
+  --color-text-dark: #f9fafb; /* Цвет текста для тёмной темы */
+  --color-muted: #9ca3af; /* Цвет для менее заметного текста */
+  --color-primary: #2563eb; /* Основной цвет */
+  --color-primary-light: #3b82f6; /* Светлый основной цвет */
+  --color-border-light: #d1d5db; /* Светлый цвет границ */
+  --color-border-dark: #374151; /* Тёмный цвет границ */
+  --color-code-bg-light: #e5e7eb; /* Цвет фона для кода - светлая тема */
+  --color-code-bg-dark: #1f2937; /* Цвет фона для кода - тёмная тема */
+  --color-highlight: #facc15; /* Цвет выделения */
 
-  --color-red: #b91c1c;
-  --color-red-border: #ef4444;
-  --color-green: #15803d;
-  --color-green-border: #22c55e;
-  --color-yellow-border: #fde68a;
-  --color-yellow-bg: #2b2b1b;
-  --color-red-bg: #261c1c;
+  --color-red: #b91c1c; /* Красный цвет */
+  --color-red-border: #ef4444; /* Граница красного цвета */
+  --color-green: #15803d; /* Зелёный цвет */
+  --color-green-border: #22c55e; /* Граница зелёного цвета */
+  --color-yellow-border: #fde68a; /* Граница жёлтого цвета */
+  --color-yellow-bg: #2b2b1b; /* Фон жёлтого цвета */
+  --color-red-bg: #261c1c; /* Фон красного цвета */
 
   /* Шрифты */
-  --font-main: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'Fira Code', 'Courier New', monospace;
+  --font-main: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Основной шрифт */
+  --font-mono: 'Fira Code', 'Courier New', monospace; /* Моноширинный шрифт */
 
   /* Размеры */
-  --radius: 0.5rem;
-  --padding: 1rem;
-  --padding-sm: 0.5rem;
-  --gap: 1rem;
-  --max-width: 1100px;
-  --search-section-height: 210px;
-
+  --radius: 0.5rem; /* Радиус углов */
+  --padding: 1rem; /* Общие отступы */
+  --padding-sm: 0.5rem; /* Маленькие отступы */
+  --gap: 1rem; /* Промежутки */
+  --max-width: 1100px; /* Максимальная ширина контейнера */
+  --search-section-height: 210px; /* Высота секции поиска */
+  
   /* Анимации */
-  --blink-speed: 1s;
+  --blink-speed: 1s; /* Скорость мигания */
 }
 
 /* === Сброс и базовые стили === */
@@ -43,8 +47,8 @@
 
 body {
   font-family: var(--font-main);
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
   padding: var(--padding);
   line-height: 1.6;
   font-size: 1rem;
@@ -60,7 +64,7 @@ body {
   transform: translateX(-50%);
   width: 100%;
   max-width: var(--max-width);
-  background-color: var(--color-bg);
+  background-color: var(--color-bg-light);
   padding: var(--padding);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -90,7 +94,7 @@ input#search {
   padding: var(--padding-sm);
   width: 100%;
   max-width: 500px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius);
   margin-bottom: var(--gap);
   transition: border 0.2s;
@@ -103,16 +107,15 @@ input#search:focus {
 }
 
 #results-container {
-  max-height: 50vh; /* или 300px — на твой выбор */
+  max-height: 50vh; /* или 300px — на ваш выбор */
   overflow-y: auto;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-light);
   padding: var(--padding-sm);
   border-radius: var(--radius);
-  background: white;
+  background: var(--color-bg-light);
   scroll-behavior: smooth;
   margin-bottom: var(--gap);
 }
-
 
 /* === Результаты === */
 #results, #warnings {
@@ -131,8 +134,8 @@ input#search:focus {
 
 /* === Карточки стран === */
 .country-block {
-  background: white;
-  border: 1px solid var(--color-border);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius);
   padding: var(--padding);
   margin-bottom: var(--gap);
@@ -152,7 +155,7 @@ input#search:focus {
 }
 
 code {
-  background-color: var(--color-code-bg);
+  background-color: var(--color-code-bg-light);
   border-radius: 0.3rem;
   padding: 0.2em 0.4em;
   font-family: var(--font-mono);
@@ -240,15 +243,13 @@ code {
   }
 }
 
-/* === Тёмная тема === */
+/* === Темная тема === */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #111827;
-    --color-text: #f9fafb;
-    --color-border: #374151;
-    --color-code-bg: #1f2937;
-    --color-muted: #9ca3af;
-    --color-primary: #60a5fa;
+    --color-bg: var(--color-bg-dark); /* Цвет фона для тёмной темы */
+    --color-text: var(--color-text-dark); /* Цвет текста для тёмной темы */
+    --color-border: var(--color-border-dark); /* Цвет границ для тёмной темы */
+    --color-code-bg: var(--color-code-bg-dark); /* Цвет фона для кода для тёмной темы */
   }
 
   body {
@@ -256,7 +257,20 @@ code {
     color: var(--color-text);
   }
 
+  #search-section {
+    background-color: var(--color-bg);
+  }
+
   .country-block {
-    background-color: #1e293b;
+    background-color: #1e293b; /* Тёмный фон карточек */
+  }
+
+  #results-container {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+  }
+
+  code {
+    background-color: var(--color-code-bg);
   }
 }
