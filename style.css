@@ -102,6 +102,18 @@ input#search:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
 }
 
+#results-container {
+  max-height: 50vh; /* или 300px — на твой выбор */
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  padding: var(--padding-sm);
+  border-radius: var(--radius);
+  background: white;
+  scroll-behavior: smooth;
+  margin-bottom: var(--gap);
+}
+
+
 /* === Результаты === */
 #results, #warnings {
   margin-bottom: var(--gap);
