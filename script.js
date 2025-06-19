@@ -44,7 +44,6 @@ function handleInputValidation(inputValue) {
 }
 
 function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '') {
-  // Нормализуем маску — убираем пробелы и дефисы, которые не влияют на структуру
   const normalizedMask = mask.replace(/[\s-]+/g, '');
 
   let regexStr = '^';
@@ -97,7 +96,7 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
 
 function handleSearch(inputValue) {
   const input = inputValue.trim();
-  const normalizedInput = input.replace(/[\s-]+/g, ''); // Для проверки длины
+  const normalizedInput = input.replace(/[\s-]+/g, '');
 
   const resultsElement = document.getElementById('results');
   if (!resultsElement) return;
@@ -123,7 +122,6 @@ function handleSearch(inputValue) {
         const regex = maskToRegex(mask, input.length, country.code, group.type);
         if (!regex) continue;
 
-        // Проверяем исходный ввод (с пробелами и тире) по регэкспу, который допускает пробелы/тире
         if (regex.test(input)) {
           if (!matchesByCountry[country.code]) {
             matchesByCountry[country.code] = {
@@ -160,10 +158,6 @@ function handleSearch(inputValue) {
   renderWarnings();
 }
 
-// ... остальной код renderKnowledgeBase, renderWarnings, DOMContentLoaded и т.п.
-
-
-
 /**
  * Отрисовка всей базы знаний в DOM.
  * Поддерживает вывод: названия, кода страны, статуса данных и даты последнего обновления.
@@ -185,12 +179,10 @@ function renderKnowledgeBase() {
       </div>
     `).join('');
 
-    // Единый универсальный способ вставки статуса
     const flagHTML = country.flagStatus
       ? `<span class="flag-status flag-status-${country.flagStatus.toLowerCase()}">[${country.flagStatus}]</span>`
       : '';
 
-    // Дата обновления (если есть)
     const lastUpdatedHTML = country.lastUpdated
       ? `<span class="last-updated">Обновлено: ${country.lastUpdated}</span>`
       : '';
