@@ -8,8 +8,7 @@
 </head>
 <body>
   <div id="search-section">
-    <h1>Поиск по маскам — v 0.0.1.9
-    </h1>
+    <h1>Поиск по маскам — v 0.0.2.0</h1>
 
     <input
       id="search"
@@ -18,8 +17,11 @@
       autocomplete="off"
     />
 
-    <section id="results" style="margin-top: 1em;">
-      <p>Результаты поиска появятся здесь...</p>
+    <!-- ✅ Добавлен контейнер для прокрутки -->
+    <section id="results-container" style="margin-top: 1em;">
+      <div id="results">
+        <p>Результаты поиска появятся здесь...</p>
+      </div>
     </section>
 
     <section id="warnings" style="margin-top: 1em;">
