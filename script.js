@@ -4,143 +4,141 @@ import { MODELS } from './data/models.js';
 import { countryDatabase } from './data/countries.js';
 
 /**
- * @constant {number} MIN_INPUT_LENGTH
+ * @constant {number}
  * Минимальное количество символов, с которого начинается поиск.
- * Измените это значение при необходимости.
+ * Измени это число, чтобы изменить чувствительность поиска.
  */
-const MIN_INPUT_LENGTH = 2; // <=== ЧТОБЫ НАЙТИ: настройка длины начала поиска
+const MIN_INPUT_LENGTH = 2; // ← можно изменить, если нужно позже
 
 /**
- * Экранирует специальные символы в строке для использования в RegExp.
- * @param {string} string
+ * Экранирует спецсимволы для использования в RegExp.
+ * @param {string} str
  * @returns {string}
  */
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
- * Преобразует маску в регулярное выражение.
+ * Преобразует маску в регулярное выражение, используя MODELS.
+ * Автоматически обрабатывает все символы, заданные в MODELS.
  *
- * Символы маски:
- *  - D: заглавная буква из MODELS.D (например, белорусский алфавит)
- *  - 9: цифра [0-9]
- *  - c: символ из модели C (тире, пробел или отсутствие символа)
- *
- * @param {string} mask - маска, заданная в шаблоне страны.
- * @param {number|null} partialLength - если указано, ограничивает длину регулярки.
- * @returns {RegExp}
+ * @param {string} mask — строковая маска (например, "AAc9999")
+ * @param {number|null} partialLength — ограничение по длине (для частичного ввода)
+ * @returns {RegExp|null}
  */
 function maskToRegex(mask, partialLength = null) {
   let regexStr = '^';
-  const length = partialLength || mask.length;
+  const len = partialLength || mask.length;
 
-  for (let i = 0; i < mask.length && i < length; i++) {
+  for (let i = 0; i < mask.length && i < len; i++) {
     const char = mask[i];
-    switch (char) {
-      case 'D':
-        regexStr += `[${MODELS.D}]`; // буквы из MODELS.D
-        break;
-      case '9':
-        regexStr += `[${MODELS['9']}]`; // цифры
-        break;
-      case 'c':
-        regexStr += '[- ]?'; // тире или пробел или ничего
-        break;
-      default:
-        regexStr += escapeRegExp(char); // любой другой символ — экранируем
+
+    if (MODELS[char]) {
+      const model = MODELS[char];
+
+      if (Array.isArray(model)) {
+        // Модель C (массив) — пробел, тире, и т.п.
+        const escaped = model.map(c => escapeRegExp(c)).join('');
+        regexStr += `[${escaped}]?`; // символы опциональны
+      } else if (typeof model === 'string') {
+        regexStr += `[${escapeRegExp(model)}]`;
+      }
+    } else {
+      regexStr += escapeRegExp(char); // обычный символ
     }
   }
 
   if (!partialLength) {
-    regexStr += '$'; // завершение строки
+    regexStr += '$'; // Завершение строки — если полное совпадение
   }
 
   try {
     return new RegExp(regexStr, 'i');
   } catch (e) {
-    console.error(`Ошибка в создании RegExp из маски "${mask}" → ${regexStr}`, e);
+    console.error(`Ошибка в regex из маски "${mask}" → ${regexStr}`, e);
     return null;
   }
 }
 
 /**
- * Обработчик ввода в поле поиска.
- * Выполняет проверку ввода по всем маскам во всех странах.
+ * Поиск и отображение результатов по введённому значению.
  */
-document.getElementById('search').addEventListener('input', function () {
-  const input = this.value.trim();
+function handleSearch(inputValue) {
+  const input = inputValue.trim();
   const resultsElement = document.getElementById('results');
   resultsElement.innerHTML = '';
 
-  console.log(`[search] Введено: "${input}" (${input.length} символов)`);
-
   if (input.length < MIN_INPUT_LENGTH) {
-    resultsElement.innerHTML = `<p>Введите минимум ${MIN_INPUT_LENGTH} символа(ов) для поиска</p>`;
-    console.info(`[search] Недостаточно символов (${input.length} < ${MIN_INPUT_LENGTH})`);
+    resultsElement.innerHTML = `<p>Введите минимум ${MIN_INPUT_LENGTH} символа(ов)</p>`;
+    console.info(`[input] Недостаточно символов (${input.length})`);
     return;
   }
 
-  const output = [];
+  console.log(`[input] Введено: "${input}" (${input.length})`);
+  const matches = [];
 
   for (const country of countryDatabase) {
-    if (!country.groups || !Array.isArray(country.groups)) {
-      console.warn(`[country] Страна ${country.name} не содержит groups`);
-      continue;
-    }
+    if (!Array.isArray(country.groups)) continue;
 
     for (const group of country.groups) {
       for (const mask of group.masks) {
         const regex = maskToRegex(mask, input.length);
-        if (!regex) continue;
-
-        if (regex.test(input)) {
-          const message = `<b>${input}</b> может соответствовать <code>${mask}</code> в группе <i>${group.type_en}</i> в стране <i>${country.name}</i>`;
-          output.push(message);
-          console.log(`[match] ✔ Совпадение: ${input} → ${mask} [${country.code}]`);
+        if (regex?.test(input)) {
+          const message = `<b>${input}</b> совпадает с <code>${mask}</code> (${group.type} / ${country.name})`;
+          matches.push(message);
+          console.log(`[match] ✔ ${input} ↔ ${mask} [${country.code}]`);
         }
       }
     }
   }
 
-  resultsElement.innerHTML = output.length > 0
-    ? `<ul>${output.map(r => `<li>${r}</li>`).join('')}</ul>`
-    : '<p>Ничего не найдено</p>';
+  resultsElement.innerHTML = matches.length
+    ? `<ul>${matches.map(m => `<li>${m}</li>`).join('')}</ul>`
+    : `<p>Ничего не найдено</p>`;
 
-  console.info(`[search] Найдено совпадений: ${output.length}`);
-});
+  console.info(`[result] Найдено совпадений: ${matches.length}`);
+}
 
 /**
- * Рендерит базу знаний по странам в DOM.
+ * Рендер базы знаний (список стран и групп масок).
  */
 function renderKnowledgeBase() {
   const container = document.getElementById('knowledge-base');
   container.innerHTML = '';
 
-  console.info('[knowledge-base] Отрисовка базы знаний');
-
   for (const country of countryDatabase) {
     const div = document.createElement('div');
     div.className = 'country-block';
 
-    const groupHtml = (country.groups || [])
-      .map(group => `
-        <div class="group-block">
-          <h4>${group.type} (${group.type_en})</h4>
-          <p><b>Маски:</b> ${group.masks.map(m => `<code>${m}</code>`).join(', ')}</p>
-        </div>
-      `)
-      .join('');
+    const groupsHTML = (country.groups || []).map(group => `
+      <div class="group-block">
+        <h4>${group.type} <small>(${group.type_en})</small></h4>
+        <p><b>Маски:</b> ${group.masks.map(m => `<code>${m}</code>`).join(', ')}</p>
+      </div>
+    `).join('');
 
     div.innerHTML = `
-      <h3>${country.name} (${country.code})</h3>
-      ${groupHtml}
+      <h3>${country.name} <small>(${country.code})</small></h3>
+      ${groupsHTML}
     `;
 
     container.appendChild(div);
   }
 
-  console.info(`[knowledge-base] Загружено стран: ${countryDatabase.length}`);
+  console.log(`[render] Загружено стран: ${countryDatabase.length}`);
 }
 
-renderKnowledgeBase();
+// Инициализация
+document.addEventListener('DOMContentLoaded', () => {
+  renderKnowledgeBase();
+
+  const input = document.getElementById('search');
+  if (input) {
+    input.addEventListener('input', () => {
+      handleSearch(input.value);
+    });
+  } else {
+    console.warn('Поле ввода #search не найдено в DOM');
+  }
+});
