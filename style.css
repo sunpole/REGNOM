@@ -1,17 +1,12 @@
 /* === CSS: Переменные (тема, шрифт, отступы, анимации) === */
 :root {
   /* Цвета */
-  --color-bg-light: #f3f4f6; /* Светлый цвет фона */
-  --color-bg-dark: #111827; /* Тёмный цвет фона */
-  --color-text-light: #111827; /* Цвет текста для светлой темы */
-  --color-text-dark: #f9fafb; /* Цвет текста для тёмной темы */
+  --color-bg: #111827; /* Тёмный цвет фона */
+  --color-text: #f9fafb; /* Цвет текста для тёмной темы */
   --color-muted: #9ca3af; /* Цвет для менее заметного текста */
   --color-primary: #2563eb; /* Основной цвет */
-  --color-primary-light: #3b82f6; /* Светлый основной цвет */
-  --color-border-light: #d1d5db; /* Светлый цвет границ */
-  --color-border-dark: #374151; /* Тёмный цвет границ */
-  --color-code-bg-light: #e5e7eb; /* Цвет фона для кода - светлая тема */
-  --color-code-bg-dark: #1f2937; /* Цвет фона для кода - тёмная тема */
+  --color-border: #374151; /* Тёмный цвет границ */
+  --color-code-bg: #1f2937; /* Цвет фона для кода - тёмная тема */
   --color-highlight: #facc15; /* Цвет выделения */
 
   --color-red: #b91c1c; /* Красный цвет */
@@ -47,8 +42,8 @@
 
 body {
   font-family: var(--font-main);
-  background-color: var(--color-bg-light);
-  color: var(--color-text-light);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   padding: var(--padding);
   line-height: 1.6;
   font-size: 1rem;
@@ -64,7 +59,7 @@ body {
   transform: translateX(-50%);
   width: 100%;
   max-width: var(--max-width);
-  background-color: var(--color-bg-light);
+  background-color: var(--color-bg);
   padding: var(--padding);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -77,6 +72,7 @@ main {
 h1, h2, h3, h4 {
   margin-bottom: 0.5em;
   line-height: 1.2;
+  color: var(--color-text); /* Цвет заголовков */
 }
 
 h1 {
@@ -94,7 +90,7 @@ input#search {
   padding: var(--padding-sm);
   width: 100%;
   max-width: 500px;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius);
   margin-bottom: var(--gap);
   transition: border 0.2s;
@@ -106,18 +102,22 @@ input#search:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
 }
 
+/* === Результаты === */
 #results-container {
   max-height: 50vh; /* или 300px — на ваш выбор */
   overflow-y: auto;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border);
   padding: var(--padding-sm);
   border-radius: var(--radius);
-  background: var(--color-bg-light);
+  background: var(--color-bg); /* Цвет фона для контейнера */
   scroll-behavior: smooth;
   margin-bottom: var(--gap);
 }
 
-/* === Результаты === */
+#results p {
+  color: var(--color-text); /* Цвет текста для параграфа */
+}
+
 #results, #warnings {
   margin-bottom: var(--gap);
   font-size: 1rem;
@@ -130,12 +130,13 @@ input#search:focus {
 
 #results li, #warnings li {
   margin-bottom: 0.5em;
+  color: var(--color-text); /* Цвет текста для списка */
 }
 
 /* === Карточки стран === */
 .country-block {
-  background: var(--color-bg-light);
-  border: 1px solid var(--color-border-light);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: var(--padding);
   margin-bottom: var(--gap);
@@ -155,7 +156,7 @@ input#search:focus {
 }
 
 code {
-  background-color: var(--color-code-bg-light);
+  background-color: var(--color-code-bg);
   border-radius: 0.3rem;
   padding: 0.2em 0.4em;
   font-family: var(--font-mono);
@@ -171,6 +172,7 @@ code {
   border: 1px solid;
   display: inline-block;
   margin-left: 1rem;
+  color: var(--color-text); /* Цвет текста для статуса */
 }
 
 .flag-status-test {
@@ -240,37 +242,5 @@ code {
   }
   code {
     font-size: 0.85rem;
-  }
-}
-
-/* === Темная тема === */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: var(--color-bg-dark); /* Цвет фона для тёмной темы */
-    --color-text: var(--color-text-dark); /* Цвет текста для тёмной темы */
-    --color-border: var(--color-border-dark); /* Цвет границ для тёмной темы */
-    --color-code-bg: var(--color-code-bg-dark); /* Цвет фона для кода для тёмной темы */
-  }
-
-  body {
-    background-color: var(--color-bg);
-    color: var(--color-text);
-  }
-
-  #search-section {
-    background-color: var(--color-bg);
-  }
-
-  .country-block {
-    background-color: #1e293b; /* Тёмный фон карточек */
-  }
-
-  #results-container {
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-  }
-
-  code {
-    background-color: var(--color-code-bg);
   }
 }
