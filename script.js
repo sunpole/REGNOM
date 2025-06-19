@@ -77,6 +77,9 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
       }
       regexStr += escapeRegExp(char);
     }
+
+    // После каждого символа маски добавляем необязательный разделитель: пробел или дефис или ничего
+    regexStr += '[ -]?';
   }
 
   if (!partialLength) {
@@ -92,6 +95,7 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
     return null;
   }
 }
+
 
 /**
  * Обработка поиска по введенному значению.
