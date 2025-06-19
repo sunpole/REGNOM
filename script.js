@@ -10,8 +10,37 @@ const warnings = new Set();
  * Экранирует спецсимволы для RegExp.
  */
 function escapeRegExp(str) {
-  // Экранируем спецсимволы для корректного использования в RegExp
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// --- Валидация ввода ---
+// Разрешённые символы: латиница (с диакритиками), цифры, пробел, дефис
+const VALID_INPUT_REGEX = /^[A-Za-zÀ-ÿ0-9\- ]*$/;
+
+/**
+ * Проверяет, состоит ли ввод только из разрешённых символов.
+ * @param {string} input
+ * @returns {boolean}
+ */
+function isValidInput(input) {
+  return VALID_INPUT_REGEX.test(input);
+}
+
+/**
+ * Показывает предупреждение, если ввод содержит запрещённые символы.
+ * Возвращает true, если ввод валиден, иначе false.
+ */
+function handleInputValidation(inputValue) {
+  const warningElement = document.getElementById('input-warning');
+  if (!warningElement) return true; // Если элемента нет — пропускаем проверку
+
+  if (!isValidInput(inputValue)) {
+    warningElement.innerHTML = '<p style="color:red;">Пожалуйста, вводите только латинские буквы, цифры и допустимые спецсимволы. Кириллица и другие алфавиты не поддерживаются.</p>';
+    return false;
+  } else {
+    warningElement.innerHTML = '';
+    return true;
+  }
 }
 
 /**
@@ -20,30 +49,26 @@ function escapeRegExp(str) {
  */
 function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '') {
   let regexStr = '^';
-  const len = partialLength ?? mask.length; // если partialLength = null/undefined, берем всю длину
+  const len = partialLength ?? mask.length;
   let hasUnknownModel = false;
 
   for (let i = 0; i < mask.length && i < len; i++) {
     const char = mask[i];
 
-    // Проверяем, есть ли символ в модели
     if (Object.prototype.hasOwnProperty.call(MODELS, char)) {
       const model = MODELS[char];
 
       if (Array.isArray(model)) {
-        // Несколько вариантов символов для данного шаблона, берем любой из них
         const escaped = model.map(c => escapeRegExp(c)).join('');
-        regexStr += `[${escaped}]?`; // символ необязательный (по вашему примеру)
+        regexStr += `[${escaped}]?`;
       } else if (typeof model === 'string') {
         regexStr += `[${escapeRegExp(model)}]`;
       } else {
-        // Если модель не строка и не массив — ошибка
         console.warn(`Неожиданный тип модели для символа '${char}' в маске "${mask}"`);
         regexStr += escapeRegExp(char);
       }
 
     } else {
-      // Если символ не в MODELS, проверяем — это ли ошибка?
       if (/^[a-zA-Z0-9]$/.test(char)) {
         const message = `⚠ Неизвестный символ-модель "${char}" в маске "${mask}" (${groupType}) страны ${countryCode}`;
         console.error(`[model] ${message}`);
@@ -55,7 +80,7 @@ function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '
   }
 
   if (!partialLength) {
-    regexStr += '$'; // конец строки, если полный матч
+    regexStr += '$';
   }
 
   if (hasUnknownModel) return null;
@@ -90,10 +115,8 @@ function handleSearch(inputValue) {
 
     for (const group of country.groups) {
       for (const mask of group.masks) {
-        // Если длина ввода больше длины маски — не подходит
         if (input.length > mask.length) continue;
 
-        // Создаем RegExp для частичного совпадения
         const regex = maskToRegex(mask, input.length, country.code, group.type);
         if (!regex) continue;
 
@@ -164,7 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('search');
   if (input) {
     input.addEventListener('input', () => {
-      handleSearch(input.value);
+      const val = input.value;
+      if (handleInputValidation(val)) {
+        handleSearch(val);
+      } else {
+        const resultsElement = document.getElementById('results');
+        if (resultsElement) resultsElement.innerHTML = '';
+      }
     });
   }
 });
