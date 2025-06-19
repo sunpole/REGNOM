@@ -158,7 +158,6 @@ function handleSearch(inputValue) {
   renderWarnings();
 }
 
-
 /**
  * Отрисовка всей базы знаний в DOM.
  * Поддерживает вывод: названия, кода страны, статуса данных и даты последнего обновления.
@@ -180,16 +179,10 @@ function renderKnowledgeBase() {
       </div>
     `).join('');
 
-    // Классы для флага: в зависимости от значения
-    let flagHTML = '';
-    if (country.flagStatus) {
-      const status = country.flagStatus.toLowerCase();
-      const statusClass = status === 'тестовый'
-        ? 'flag-status flag-status-test'
-        : 'flag-status flag-status-real';
-
-      flagHTML = `<span class="${statusClass}">${country.flagStatus}</span>`;
-    }
+    // Единый универсальный способ вставки статуса
+    const flagHTML = country.flagStatus
+      ? `<span class="flag-status flag-status-${country.flagStatus.toLowerCase()}">[${country.flagStatus}]</span>`
+      : '';
 
     // Дата обновления (если есть)
     const lastUpdatedHTML = country.lastUpdated
@@ -207,8 +200,6 @@ function renderKnowledgeBase() {
     container.appendChild(div);
   }
 }
-
-
 
 /**
  * Отрисовка предупреждений о неизвестных моделях.
