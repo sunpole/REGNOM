@@ -139,6 +139,26 @@ code {
   font-size: 0.95em;
 }
 
+
+/* Новые стили для результатов поиска по странам с чередованием */
+.country-result {
+  padding: var(--padding-sm);
+  margin-bottom: var(--gap);
+  border: 1px solid;
+  border-radius: var(--radius);
+}
+
+.country-result-0 {
+  border-color: #f87171; /* красный светлый (пример) */
+  background-color: #fef2f2; /* очень светлый красный фон */
+}
+
+.country-result-1 {
+  border-color: #fde68a; /* жёлтый светлый */
+  background-color: #fffbeb; /* очень светлый жёлтый фон */
+}
+
+
 /* === Адаптивность === */
 @media (max-width: 768px) {
   h1 {
