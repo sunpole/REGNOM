@@ -1,68 +1,61 @@
-// script.js
-
 import { MODELS } from './data/models.js';
 import { countryDatabase } from './data/countries.js';
 
-/**
- * @constant {number}
- * Минимальное количество символов, с которого начинается поиск.
- * Измени это число, чтобы изменить чувствительность поиска.
- */
-const MIN_INPUT_LENGTH = 2; // ← можно изменить, если нужно позже
+const MIN_INPUT_LENGTH = 2;
 
 /**
- * Экранирует спецсимволы для использования в RegExp.
- * @param {string} str
- * @returns {string}
+ * Экранирует спецсимволы для RegExp.
  */
 function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
- * Преобразует маску в регулярное выражение, используя MODELS.
- * Автоматически обрабатывает все символы, заданные в MODELS.
- *
- * @param {string} mask — строковая маска (например, "AAc9999")
- * @param {number|null} partialLength — ограничение по длине (для частичного ввода)
- * @returns {RegExp|null}
+ * Преобразует маску в регулярное выражение.
+ * Использует все модели из MODELS. Сообщает об ошибках, если в маске есть неизвестный символ.
  */
-function maskToRegex(mask, partialLength = null) {
+function maskToRegex(mask, partialLength = null, countryCode = '', groupType = '') {
   let regexStr = '^';
   const len = partialLength || mask.length;
 
   for (let i = 0; i < mask.length && i < len; i++) {
     const char = mask[i];
 
-    if (MODELS[char]) {
+    if (MODELS.hasOwnProperty(char)) {
       const model = MODELS[char];
-
       if (Array.isArray(model)) {
-        // Модель C (массив) — пробел, тире, и т.п.
         const escaped = model.map(c => escapeRegExp(c)).join('');
-        regexStr += `[${escaped}]?`; // символы опциональны
+        regexStr += `[${escaped}]?`;
       } else if (typeof model === 'string') {
         regexStr += `[${escapeRegExp(model)}]`;
+      } else {
+        console.warn(`[model] Неподдерживаемая модель: ${char} в "${mask}"`);
       }
     } else {
-      regexStr += escapeRegExp(char); // обычный символ
+      // Проверка, не является ли это обычным символом (например, '-')
+      if (/^[a-zA-Z0-9]$/.test(char)) {
+        console.error(
+          `[model] ❌ Неизвестный символ-модель "${char}" в маске "${mask}" (${groupType}) страны ${countryCode}`
+        );
+      }
+      regexStr += escapeRegExp(char);
     }
   }
 
   if (!partialLength) {
-    regexStr += '$'; // Завершение строки — если полное совпадение
+    regexStr += '$';
   }
 
   try {
     return new RegExp(regexStr, 'i');
   } catch (e) {
-    console.error(`Ошибка в regex из маски "${mask}" → ${regexStr}`, e);
+    console.error(`❌ Ошибка RegExp из маски "${mask}" → ${regexStr}`, e);
     return null;
   }
 }
 
 /**
- * Поиск и отображение результатов по введённому значению.
+ * Обработчик поиска.
  */
 function handleSearch(inputValue) {
   const input = inputValue.trim();
@@ -83,9 +76,16 @@ function handleSearch(inputValue) {
 
     for (const group of country.groups) {
       for (const mask of group.masks) {
-        const regex = maskToRegex(mask, input.length);
-        if (regex?.test(input)) {
-          const message = `<b>${input}</b> совпадает с <code>${mask}</code> (${group.type} / ${country.name})`;
+        if (input.length > mask.length) {
+          console.log(`[skip] Пропуск: "${input}" длиннее маски "${mask}"`);
+          continue;
+        }
+
+        const regex = maskToRegex(mask, input.length, country.code, group.type);
+        if (!regex) continue;
+
+        if (regex.test(input)) {
+          const message = `<b>${input}</b> совпадает с <code>${mask}</code> (${group.type_en} / ${country.name})`;
           matches.push(message);
           console.log(`[match] ✔ ${input} ↔ ${mask} [${country.code}]`);
         }
@@ -101,7 +101,7 @@ function handleSearch(inputValue) {
 }
 
 /**
- * Рендер базы знаний (список стран и групп масок).
+ * Отрисовка базы знаний.
  */
 function renderKnowledgeBase() {
   const container = document.getElementById('knowledge-base');
@@ -129,7 +129,9 @@ function renderKnowledgeBase() {
   console.log(`[render] Загружено стран: ${countryDatabase.length}`);
 }
 
-// Инициализация
+/**
+ * Инициализация
+ */
 document.addEventListener('DOMContentLoaded', () => {
   renderKnowledgeBase();
 
@@ -139,6 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
       handleSearch(input.value);
     });
   } else {
-    console.warn('Поле ввода #search не найдено в DOM');
-  }
+    console.warn('❗ Поле ввода #search не найдено в DOM');
+});
 });
